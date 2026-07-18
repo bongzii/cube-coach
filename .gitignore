@@ -1,0 +1,10 @@
+node_modules/
+dist/
+release/
+.local-node/
+*.log
+.DS_Store
+*.dmg
+*.blockmap
+.vercel
+.netlify

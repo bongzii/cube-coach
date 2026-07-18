@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --animate-fade-in-up: fade-in-up 0.3s ease-out both;
+  --animate-bounce-in: bounce-in 0.3s ease-out both;
+  --animate-shimmer: shimmer 0.6s ease-out;
+}
+
+/* Default theme variables (overridden by JS theme registry) */
+:root {
+  --theme-bg: #facc15;
+  --theme-text: #000000;
+  --theme-card-bg: #ffffff;
+  --theme-card-text: #000000;
+  --theme-border: #000000;
+  --theme-primary: #2563eb;
+  --theme-primary-hover: #1d4ed8;
+  --theme-accent: #facc15;
+  --theme-accent-light: #fef08a;
+  --theme-muted: #f3f4f6;
+  --theme-shadow: rgba(0, 0, 0, 1);
+}
+
+body {
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.theme-bg-main { background-color: var(--theme-bg); }
+.theme-text-main { color: var(--theme-text); }
+.theme-card { background-color: var(--theme-card-bg); color: var(--theme-card-text); border-color: var(--theme-border); }
+.theme-border-main { border-color: var(--theme-border); }
+.theme-shadow-main { box-shadow: 4px 4px 0px 0px var(--theme-shadow); }
+.theme-shadow-large { box-shadow: 8px 8px 0px 0px var(--theme-shadow); }
+.theme-shadow-small { box-shadow: 2px 2px 0px 0px var(--theme-shadow); }
+.theme-shadow-tiny { box-shadow: 1px 1px 0px 0px var(--theme-shadow); }
+.theme-accent-bg { background-color: var(--theme-accent-light); }
+.theme-muted-bg { background-color: var(--theme-muted); }
+.theme-btn-primary { background-color: var(--theme-primary); color: #000; border-color: var(--theme-border); }
+.theme-btn-primary:hover { background-color: var(--theme-primary-hover); }
+
+/* Card hover glow */
+.theme-card-glow {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.theme-card-glow:hover {
+  box-shadow: 4px 4px 0px 0px var(--theme-shadow), 0 0 20px color-mix(in srgb, var(--theme-shadow) 20%, transparent);
+  transform: translateY(-4px);
+}
+
+/* Animations */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes bounce-in {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes toast-out {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(-8px) scale(0.95); }
+}
+.animate-toast-in {
+  animation: toast-in 0.2s ease-out both;
+}
+.animate-toast-out {
+  animation: toast-out 0.2s ease-in both;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--theme-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--theme-primary); }
+
+/* Focus ring */
+*:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
+}
+
+.theme-card svg.text-black {
+  color: inherit;
+}
