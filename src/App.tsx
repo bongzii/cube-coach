@@ -33,6 +33,7 @@ import TimerSettingsPopover from "./components/TimerSettingsPopover";
 import type { CaseType, Penalty, Session, SessionType, Solve, TimerSettings, TimerPhase } from "./types";
 import { DEFAULT_TIMER_SETTINGS } from "./types";
 import { InspectionAlerts } from "./lib/audio";
+import { registerSW } from "virtual:pwa-register";
 
 export type CaseItem = OLLCase | PLLCase | F2LCase;
 
@@ -243,6 +244,18 @@ export default function App() {
     localStorage.setItem("ll-theme", activeTheme);
     applyTheme(activeTheme);
   }, [activeTheme]);
+
+  // PWA update prompt: show banner when a new service worker is waiting
+  const [swUpdateAvailable, setSwUpdateAvailable] = useState(false);
+  useEffect(() => {
+    const updateSW = registerSW({
+      onNeedRefresh() {
+        setSwUpdateAvailable(true);
+      },
+      onOfflineReady() {},
+    });
+    (window as unknown as { __cubeCoachReloadSW?: () => void }).__cubeCoachReloadSW = () => updateSW(true);
+  }, []);
 
   // Active algorithm variant per case
   const [activeAlgVariant, setActiveAlgVariant] = useState<Record<number, "primary" | "alt1" | "alt2" | "alt3" | "alt4" | "alt5">>({});
@@ -1123,6 +1136,25 @@ export default function App() {
       />
 
       <Toast message={toast?.message ?? null} />
+
+      {swUpdateAvailable && (
+        <div className="fixed top-0 left-0 right-0 z-[60] flex items-center justify-center gap-3 px-4 py-2 theme-btn-primary border-b-2 theme-border-main text-xs font-black font-mono uppercase animate-fade-in">
+          <span>New version available</span>
+          <button
+            onClick={() => (window as unknown as { __cubeCoachReloadSW?: () => void }).__cubeCoachReloadSW?.()}
+            className="px-2 py-0.5 rounded border-2 theme-border-main theme-control-surface font-black"
+          >
+            Reload
+          </button>
+          <button
+            onClick={() => setSwUpdateAvailable(false)}
+            className="px-2 py-0.5 rounded border-2 theme-border-main theme-control-surface font-black"
+            aria-label="Dismiss update"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
     </div>
   );

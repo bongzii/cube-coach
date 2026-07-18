@@ -14,12 +14,12 @@ export default defineConfig(({command}) => {
       react(),
       tailwindcss(),
       VitePWA({
-        registerType: 'autoUpdate',
+        registerType: 'prompt',
         includeAssets: ['logo.png', 'olls  numbered/**/*.svg', 'plls lettered/**/*.svg'],
         manifest: {
           name: 'Cube Coach',
           short_name: 'CubeCoach',
-          description: 'OLL/PLL Rubik\'s Cube Trainer',
+          description: 'F2L, OLL & PLL Rubik\'s Cube Trainer',
           theme_color: '#0f172a',
           background_color: '#fafafa',
           display: 'standalone',
