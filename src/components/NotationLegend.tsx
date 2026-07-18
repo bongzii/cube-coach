@@ -84,7 +84,7 @@ export default function NotationLegend({ isOpen, onClose }: NotationLegendProps)
         <div className="space-y-6">
           {notationGroups.map((group) => (
             <div key={group.title}>
-              <h3 className="text-xs font-black uppercase tracking-wider text-gray-500 mb-2 font-sans">
+              <h3 className="text-xs font-black uppercase tracking-wider theme-muted-text mb-2 font-sans">
                 {group.title}
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -93,7 +93,7 @@ export default function NotationLegend({ isOpen, onClose }: NotationLegendProps)
                     key={item.symbol}
                     className="flex items-center gap-2 theme-muted-bg rounded-lg border-2 theme-border-main px-3 py-2 theme-shadow-tiny"
                   >
-                    <code className="text-sm font-black font-mono bg-yellow-400 text-black px-1.5 py-0.5 rounded border theme-border-main">
+                    <code className="text-sm font-black font-mono theme-pill-accent px-1.5 py-0.5 rounded border theme-border-main">
                       {item.symbol}
                     </code>
                     <span className="text-xs font-bold">{item.desc}</span>
@@ -105,10 +105,10 @@ export default function NotationLegend({ isOpen, onClose }: NotationLegendProps)
         </div>
 
         <div className="mt-6 pt-4 border-t-2 theme-border-main">
-          <p className="text-xs text-gray-500 font-bold leading-relaxed">
+          <p className="text-xs theme-muted-text font-bold leading-relaxed">
             All algorithms are written in <strong>standard WCA notation</strong>.
             Moves are applied as if you are looking directly at that face.
-            A <code className="text-xs font-mono font-black bg-yellow-400 px-1 rounded">'</code> after a move
+            A <code className="text-xs font-mono font-black theme-pill-accent px-1 rounded">'</code> after a move
             means turn that face counter-clockwise.
           </p>
         </div>

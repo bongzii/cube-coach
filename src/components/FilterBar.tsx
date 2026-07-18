@@ -33,19 +33,19 @@ export default function FilterBar({
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
 
         <div className="relative w-full md:w-96">
-          <Search className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-black" />
+          <Search className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 theme-card-text" />
           <input
             type="text"
             placeholder="Search by case #, name, or keywords..."
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
             aria-label="Search cases"
-            className="w-full bg-gray-50 text-black rounded-xl pl-11 pr-4 py-2.5 text-sm border-2 theme-border-main focus:outline-none focus:bg-white transition-all placeholder:text-gray-400 font-bold theme-shadow-small"
+            className="theme-input w-full rounded-xl pl-11 pr-4 py-2.5 text-sm border-2 theme-border-main transition-all placeholder:theme-muted-text font-bold theme-shadow-small"
           />
           {searchTerm && (
             <button
               onClick={() => onSearchChange("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black text-xs font-mono font-bold active:scale-95"
+              className="absolute right-3 top-1/2 -translate-y-1/2 theme-muted-text hover:theme-card-text text-xs font-mono font-bold active:scale-95"
             >
               Clear
             </button>
@@ -55,16 +55,16 @@ export default function FilterBar({
         <div className="flex gap-3 w-full md:w-auto self-stretch md:self-auto">
 
           <div className="flex-1 md:flex-none flex items-center theme-muted-bg rounded-xl border-2 theme-border-main px-3 relative theme-shadow-small">
-            <Sliders className="w-4 h-4 text-black mr-2 shrink-0" />
+            <Sliders className="w-4 h-4 theme-card-text mr-2 shrink-0" />
             <select
               value={selectedStatus}
               onChange={(e) => onStatusChange(e.target.value)}
-              className="bg-transparent text-black text-xs font-bold focus:outline-none pr-6 py-2.5 cursor-pointer w-full"
+              className="bg-transparent theme-card-text text-xs font-bold focus:outline-none pr-6 py-2.5 cursor-pointer w-full"
             >
-              <option value="All" className="bg-white text-black">All Statuses</option>
-              <option value="Mastered" className="bg-white text-green-600 font-bold">Mastered</option>
-              <option value="Learning" className="bg-white text-blue-600 font-bold">Learning</option>
-              <option value="Not Started" className="bg-white text-gray-500 font-bold">Not Started</option>
+              <option value="All" className="theme-control-surface theme-card-text">All Statuses</option>
+              <option value="Mastered" className="theme-control-surface text-green-600 font-bold">Mastered</option>
+              <option value="Learning" className="theme-control-surface text-blue-600 font-bold">Learning</option>
+              <option value="Not Started" className="theme-control-surface theme-muted-text font-bold">Not Started</option>
             </select>
           </div>
 
@@ -80,8 +80,8 @@ export default function FilterBar({
 
       </div>
 
-      <div className="mt-6 pt-5 border-t border-gray-200">
-        <span className="text-xs font-black text-gray-500 uppercase tracking-widest font-sans block mb-3">Categories:</span>
+      <div className="mt-6 pt-5 border-t theme-border-main">
+        <span className="text-xs font-black theme-muted-text uppercase tracking-widest font-sans block mb-3">Categories:</span>
         <div className="flex flex-wrap gap-2">
           {groups.map(groupName => {
             const stats = groupName !== "All" ? getGroupStats(groupName) : null;
@@ -92,14 +92,14 @@ export default function FilterBar({
                 onClick={() => onGroupChange(groupName)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 active:scale-95 ${
                   isSelected
-                    ? "bg-blue-600 text-white border-2 theme-border-main theme-shadow-small font-black"
-                    : "bg-white text-black hover:bg-gray-100 border-2 theme-border-main theme-shadow-small font-bold"
+                    ? "theme-btn-primary theme-shadow-small font-black"
+                    : "theme-btn-ghost border-2 theme-border-main theme-shadow-small font-bold"
                 }`}
               >
                 {groupName}
                 {stats && stats.count > 0 && (
                   <span className={`text-[10px] rounded-full px-1.5 py-0.2 font-mono ${
-                    isSelected ? "bg-white text-black border theme-border-main" : "bg-gray-200 text-gray-700 border border-gray-300"
+                    isSelected ? "theme-control-surface theme-card-text border theme-border-main" : "theme-muted-bg theme-muted-text border border-gray-300"
                   }`}>
                     {stats.mastered}/{stats.count}
                   </span>

@@ -9,6 +9,8 @@ export interface ThemeVars {
   "theme-accent": string;
   "theme-accent-light": string;
   "theme-muted": string;
+  "theme-muted-text": string;
+  "theme-input-bg": string;
   "theme-shadow": string;
 }
 
@@ -26,6 +28,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#facc15",
       "theme-accent-light": "#fef08a",
       "theme-muted": "#f3f4f6",
+      "theme-muted-text": "#6b7280",
+      "theme-input-bg": "#ffffff",
       "theme-shadow": "rgba(0, 0, 0, 1)",
     },
   },
@@ -42,6 +46,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#3b82f6",
       "theme-accent-light": "#eff6ff",
       "theme-muted": "#f1f5f9",
+      "theme-muted-text": "#64748b",
+      "theme-input-bg": "#ffffff",
       "theme-shadow": "rgba(0, 0, 0, 0.08)",
     },
   },
@@ -58,6 +64,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#38bdf8",
       "theme-accent-light": "#1e3a5f",
       "theme-muted": "#1e293b",
+      "theme-muted-text": "#94a3b8",
+      "theme-input-bg": "#0f172a",
       "theme-shadow": "rgba(0, 0, 0, 0.4)",
     },
   },
@@ -74,6 +82,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#8b5cf6",
       "theme-accent-light": "#2e1065",
       "theme-muted": "#2e1065",
+      "theme-muted-text": "#c4b5fd",
+      "theme-input-bg": "#1a0533",
       "theme-shadow": "rgba(0, 0, 0, 0.5)",
     },
   },
@@ -90,6 +100,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#22c55e",
       "theme-accent-light": "#064e3b",
       "theme-muted": "#065f46",
+      "theme-muted-text": "#a7f3d0",
+      "theme-input-bg": "#064e3b",
       "theme-shadow": "rgba(0, 0, 0, 0.4)",
     },
   },
@@ -106,6 +118,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#0ea5e9",
       "theme-accent-light": "#0c4a6e",
       "theme-muted": "#075985",
+      "theme-muted-text": "#bae6fd",
+      "theme-input-bg": "#0c4a6e",
       "theme-shadow": "rgba(0, 0, 0, 0.4)",
     },
   },
@@ -122,6 +136,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#f97316",
       "theme-accent-light": "#7c2d12",
       "theme-muted": "#9a3412",
+      "theme-muted-text": "#fed7aa",
+      "theme-input-bg": "#7c2d12",
       "theme-shadow": "rgba(0, 0, 0, 0.4)",
     },
   },
@@ -138,6 +154,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#88c0d0",
       "theme-accent-light": "#3b4252",
       "theme-muted": "#3b4252",
+      "theme-muted-text": "#d8dee9",
+      "theme-input-bg": "#2e3440",
       "theme-shadow": "rgba(0, 0, 0, 0.4)",
     },
   },
@@ -154,6 +172,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#bd93f9",
       "theme-accent-light": "#44475a",
       "theme-muted": "#44475a",
+      "theme-muted-text": "#c8c8f0",
+      "theme-input-bg": "#282a36",
       "theme-shadow": "rgba(0, 0, 0, 0.5)",
     },
   },
@@ -170,6 +190,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#22c55e",
       "theme-accent-light": "#14532d",
       "theme-muted": "#166534",
+      "theme-muted-text": "#bbf7d0",
+      "theme-input-bg": "#14532d",
       "theme-shadow": "rgba(0, 0, 0, 0.4)",
     },
   },
@@ -186,6 +208,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#eab308",
       "theme-accent-light": "#2e1065",
       "theme-muted": "#4c1d95",
+      "theme-muted-text": "#e9d5ff",
+      "theme-input-bg": "#2e1065",
       "theme-shadow": "rgba(0, 0, 0, 0.5)",
     },
   },
@@ -202,6 +226,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#ec4899",
       "theme-accent-light": "#fce7f3",
       "theme-muted": "#fdf2f8",
+      "theme-muted-text": "#be185d",
+      "theme-input-bg": "#ffffff",
       "theme-shadow": "rgba(0, 0, 0, 0.08)",
     },
   },
@@ -218,6 +244,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#06b6d4",
       "theme-accent-light": "#0f172a",
       "theme-muted": "#0f172a",
+      "theme-muted-text": "#7dd3fc",
+      "theme-input-bg": "#020617",
       "theme-shadow": "rgba(0, 0, 0, 0.6)",
     },
   },
@@ -234,6 +262,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#ef4444",
       "theme-accent-light": "#450a0a",
       "theme-muted": "#7f1d1d",
+      "theme-muted-text": "#fecaca",
+      "theme-input-bg": "#450a0a",
       "theme-shadow": "rgba(0, 0, 0, 0.5)",
     },
   },
@@ -250,6 +280,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#14b8a6",
       "theme-accent-light": "#0f766e",
       "theme-muted": "#115e59",
+      "theme-muted-text": "#99f6e4",
+      "theme-input-bg": "#0f766e",
       "theme-shadow": "rgba(0, 0, 0, 0.4)",
     },
   },
@@ -266,6 +298,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#f59e0b",
       "theme-accent-light": "#451a03",
       "theme-muted": "#78350f",
+      "theme-muted-text": "#fde68a",
+      "theme-input-bg": "#451a03",
       "theme-shadow": "rgba(0, 0, 0, 0.5)",
     },
   },
@@ -282,6 +316,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#f43f5e",
       "theme-accent-light": "#4c0519",
       "theme-muted": "#881337",
+      "theme-muted-text": "#fecdd3",
+      "theme-input-bg": "#4c0519",
       "theme-shadow": "rgba(0, 0, 0, 0.5)",
     },
   },
@@ -298,6 +334,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#a1a1aa",
       "theme-accent-light": "#27272a",
       "theme-muted": "#27272a",
+      "theme-muted-text": "#a1a1aa",
+      "theme-input-bg": "#18181b",
       "theme-shadow": "rgba(0, 0, 0, 0.5)",
     },
   },
@@ -314,6 +352,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#84cc16",
       "theme-accent-light": "#1a2e05",
       "theme-muted": "#365314",
+      "theme-muted-text": "#d9f99d",
+      "theme-input-bg": "#1a2e05",
       "theme-shadow": "rgba(0, 0, 0, 0.5)",
     },
   },
@@ -330,6 +370,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#a8a29e",
       "theme-accent-light": "#292524",
       "theme-muted": "#292524",
+      "theme-muted-text": "#d6d3d1",
+      "theme-input-bg": "#1c1917",
       "theme-shadow": "rgba(0, 0, 0, 0.5)",
     },
   },
@@ -346,6 +388,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#6366f1",
       "theme-accent-light": "#1e1b4b",
       "theme-muted": "#312e81",
+      "theme-muted-text": "#c7d2fe",
+      "theme-input-bg": "#1e1b4b",
       "theme-shadow": "rgba(0, 0, 0, 0.5)",
     },
   },
@@ -362,6 +406,8 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#38bdf8",
       "theme-accent-light": "#0369a1",
       "theme-muted": "#075985",
+      "theme-muted-text": "#bae6fd",
+      "theme-input-bg": "#0369a1",
       "theme-shadow": "rgba(0, 0, 0, 0.4)",
     },
   },
@@ -378,16 +424,17 @@ export const themes: Record<string, { label: string; vars: ThemeVars }> = {
       "theme-accent": "#10b981",
       "theme-accent-light": "#022c22",
       "theme-muted": "#064e3b",
+      "theme-muted-text": "#a7f3d0",
+      "theme-input-bg": "#022c22",
       "theme-shadow": "rgba(0, 0, 0, 0.5)",
     },
   },
 };
 
-export function applyTheme(themeName: string) {
-  const theme = themes[themeName];
-  if (!theme) return;
+export function applyTheme(themeKey: string): void {
+  const theme = themes[themeKey] ?? themes.default;
   const root = document.documentElement;
-  for (const [key, value] of Object.entries(theme.vars)) {
+  (Object.entries(theme.vars) as [keyof ThemeVars, string][]).forEach(([key, value]) => {
     root.style.setProperty(`--${key}`, value);
-  }
+  });
 }

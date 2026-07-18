@@ -8,6 +8,7 @@
   --animate-fade-in-up: fade-in-up 0.3s ease-out both;
   --animate-bounce-in: bounce-in 0.3s ease-out both;
   --animate-shimmer: shimmer 0.6s ease-out;
+  --animate-fade-in: fade-in 0.25s ease-out both;
 }
 
 /* Default theme variables (overridden by JS theme registry) */
@@ -36,13 +37,30 @@ body {
 .theme-card { background-color: var(--theme-card-bg); color: var(--theme-card-text); border-color: var(--theme-border); }
 .theme-border-main { border-color: var(--theme-border); }
 .theme-shadow-main { box-shadow: 4px 4px 0px 0px var(--theme-shadow); }
-.theme-shadow-large { box-shadow: 8px 8px 0px 0px var(--theme-shadow); }
 .theme-shadow-small { box-shadow: 2px 2px 0px 0px var(--theme-shadow); }
 .theme-shadow-tiny { box-shadow: 1px 1px 0px 0px var(--theme-shadow); }
 .theme-accent-bg { background-color: var(--theme-accent-light); }
 .theme-muted-bg { background-color: var(--theme-muted); }
-.theme-btn-primary { background-color: var(--theme-primary); color: #000; border-color: var(--theme-border); }
+.theme-muted-text { color: var(--theme-muted-text); }
+.theme-btn-primary { background-color: var(--theme-primary); color: var(--theme-card-bg); border: 2px solid var(--theme-border); }
 .theme-btn-primary:hover { background-color: var(--theme-primary-hover); }
+/* Neutral control surface used by header toggles, icon buttons, selects */
+.theme-control-surface { background-color: var(--theme-card-bg); color: var(--theme-card-text); border: 2px solid var(--theme-border); }
+.theme-control-surface:hover { background-color: var(--theme-muted); }
+/* Inactive toggle/pill button */
+.theme-btn-ghost { background-color: var(--theme-card-bg); color: var(--theme-card-text); border: 2px solid var(--theme-border); }
+.theme-btn-ghost:hover { background-color: var(--theme-muted); }
+/* Accent pill (e.g. case id badge) */
+.theme-pill-accent { background-color: var(--theme-accent); color: var(--theme-card-text); border: 2px solid var(--theme-border); }
+/* Accent-soft pill used for scramble display backgrounds */
+.theme-pill-accent-soft { background-color: var(--theme-accent-light); color: var(--theme-card-text); border: 1px solid var(--theme-border); }
+/* Solid chip/input surface that stays readable on any theme */
+.theme-chip { background-color: var(--theme-input-bg); color: var(--theme-card-text); border: 1px solid var(--theme-border); }
+.theme-input { background-color: var(--theme-input-bg); color: var(--theme-card-text); border: 1px solid var(--theme-border); }
+.theme-input::placeholder { color: var(--theme-muted-text); }
+.theme-toggle-group { background-color: var(--theme-muted); border: 2px solid var(--theme-border); }
+
+::selection { background: var(--theme-primary); color: #fff; }
 
 /* Card hover glow */
 .theme-card-glow {
@@ -57,6 +75,10 @@ body {
 @keyframes fade-in-up {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 @keyframes bounce-in {
   0% { transform: scale(0); }
@@ -94,6 +116,11 @@ body {
   outline-offset: 2px;
 }
 
-.theme-card svg.text-black {
-  color: inherit;
+/* Keep selects/inputs keyboard-accessible (override component focus:outline-none) */
+select:focus-visible,
+input:focus-visible,
+.theme-input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--theme-primary);
+  outline-offset: 2px;
 }
