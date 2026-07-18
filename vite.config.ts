@@ -4,9 +4,12 @@ import path from 'path';
 import {defineConfig} from 'vite';
 import {VitePWA} from 'vite-plugin-pwa';
 
-export default defineConfig(() => {
+export default defineConfig(({command}) => {
+  const isGitHubPages = process.env.GITHUB_PAGES === 'true';
+  const base = isGitHubPages ? '/cube-coach/' : './';
+
   return {
-    base: './',
+    base,
     plugins: [
       react(),
       tailwindcss(),
@@ -21,11 +24,11 @@ export default defineConfig(() => {
           background_color: '#fafafa',
           display: 'standalone',
           orientation: 'portrait',
-          scope: '/',
-          start_url: '/',
+          scope: base,
+          start_url: base,
           icons: [
-            {src: '/logo.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable'},
-            {src: '/logo.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable'}
+            {src: `${base}logo.png`, sizes: '192x192', type: 'image/png', purpose: 'any maskable'},
+            {src: `${base}logo.png`, sizes: '512x512', type: 'image/png', purpose: 'any maskable'}
           ]
         },
         workbox: {
