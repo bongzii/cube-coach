@@ -2,10 +2,11 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import {
   Copy,
   Check,
-  BookOpen,
   Timer,
   HelpCircle,
-  Layers,
+  Boxes,
+  Grid3x3,
+  Shapes,
   RefreshCw
 } from "lucide-react";
 import { ollCases, OLLCase } from "./data/ollCases";
@@ -718,7 +719,7 @@ export default function App() {
                   }`}
                 >
                   <span className="flex items-center gap-1">
-                    <Layers className="w-3 h-3" />
+                    <Boxes className="w-3 h-3" />
                     F2L
                   </span>
                 </button>
@@ -731,7 +732,7 @@ export default function App() {
                   }`}
                 >
                   <span className="flex items-center gap-1">
-                    <Layers className="w-3 h-3" />
+                    <Grid3x3 className="w-3 h-3" />
                     OLL
                   </span>
                 </button>
@@ -744,7 +745,7 @@ export default function App() {
                   }`}
                 >
                   <span className="flex items-center gap-1">
-                    <Layers className="w-3 h-3" />
+                    <Shapes className="w-3 h-3" />
                     PLL
                   </span>
                 </button>
@@ -768,11 +769,12 @@ export default function App() {
             {/* Notation Legend Trigger */}
             <button
               onClick={() => setShowNotationLegend(true)}
-              className="theme-control-surface flex items-center justify-center w-9 h-9 rounded-xl theme-shadow-small transition-all active:scale-95"
-              title="Cube notation reference"
-              aria-label="Open notation legend"
+              className="theme-control-surface flex items-center gap-1.5 px-3 h-9 rounded-xl theme-shadow-small transition-all active:scale-95"
+              title="Open move notation guide"
+              aria-label="Open move notation guide"
             >
               <HelpCircle className="w-4 h-4" />
+              <span className="text-xs font-black uppercase font-mono">Move notation</span>
             </button>
 
             {/* Mode Switching Tabs */}
@@ -786,8 +788,8 @@ export default function App() {
                     : "theme-btn-ghost"
                 }`}
               >
-                <BookOpen className="w-4 h-4" />
-                Reference Guide
+                <span className="text-base leading-none">📖</span>
+                Case Library
               </button>
               <button
                 id="tab-trainer"
@@ -880,28 +882,13 @@ export default function App() {
                         <span className="text-xs font-black font-mono theme-pill-accent px-2 py-0.5 rounded theme-shadow-tiny">
                           {labelPrefix} #{String(llCase.id).padStart(2, '0')}
                         </span>
-                        <span className="text-[10px] font-mono theme-muted-text font-bold px-2 py-0.5 theme-chip rounded uppercase">
-                          {llCase.category}
-                        </span>
                           {caseType === "f2l" && (
                             <F2LSlotIndicator
                               slot={getF2LCaseProperties(llCase as F2LCase).slot}
                               edgeOriented={getF2LCaseProperties(llCase as F2LCase).edgeOriented}
                             />
                           )}
-                          {(() => {
-                            const gStats = getGroupStats(llCase.group);
-                            const pct = gStats.count > 0 ? Math.round((gStats.mastered / gStats.count) * 100) : 0;
-                            const r = 7;
-                            const circ = 2 * Math.PI * r;
-                            const offset = circ - (pct / 100) * circ;
-                            return (
-                              <svg width="18" height="18" viewBox="0 0 20 20" className="shrink-0">
-                                <circle cx="10" cy="10" r={r} fill="none" stroke="currentColor" strokeWidth="2" opacity="0.15" />
-                                <circle cx="10" cy="10" r={r} fill="none" stroke={pct === 100 ? "#16a34a" : "#3b82f6"} strokeWidth="2" strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round" transform="rotate(-90 10 10)" />
-                              </svg>
-                            );
-                          })()}
+
                         </div>
 
                           <select
@@ -924,6 +911,9 @@ export default function App() {
                         <span className="text-[11px] font-mono theme-muted-text font-semibold uppercase tracking-wider block mt-0.5 flex items-center gap-1.5">
                           <span className="w-2 h-2 rounded-full inline-block shrink-0" style={{ backgroundColor: GROUP_COLORS[llCase.group] || "#999" }}></span>
                           {llCase.group}
+                          <span className="text-[10px] font-mono theme-muted-text font-bold px-1.5 py-0.5 theme-chip rounded uppercase">
+                            {llCase.category}
+                          </span>
                         </span>
                       </div>
 

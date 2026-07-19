@@ -44,15 +44,15 @@ export default function AlgorithmSelector({
       {visibleVariants.length > 1 && (
         <div className="flex items-center gap-2 mb-1">
           <span className="text-[9px] font-black theme-muted-text uppercase">Algs:</span>
-          <div className="flex gap-1">
+          <select
+            value={variant}
+            onChange={(e) => onSelectVariant(llCase.id, e.target.value)}
+            className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-xl border-2 theme-border-main theme-control-surface cursor-pointer"
+          >
             {visibleVariants.map(k => (
-              <button key={k} onClick={() => onSelectVariant(llCase.id, k)}
-                className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border transition-all active:scale-95 ${variant === k ? "theme-btn-primary" : "theme-btn-ghost border-2 theme-border-main"}`}
-              >
-                {variantLabels[k]}
-              </button>
+              <option key={k} value={k}>{variantLabels[k]}</option>
             ))}
-          </div>
+          </select>
         </div>
       )}
       <div className="flex items-start gap-2">

@@ -5,51 +5,41 @@ interface NotationLegendProps {
   onClose: () => void;
 }
 
-const notationGroups = [
+const notationGroups: {
+  title: string;
+  items: { symbol: string; desc: string; vc?: string }[];
+}[] = [
   {
-    title: "Face Turns (clockwise)",
+    title: "Single Layer Turns",
     items: [
-      { symbol: "R", desc: "Right face" },
-      { symbol: "L", desc: "Left face" },
-      { symbol: "U", desc: "Upper face" },
-      { symbol: "D", desc: "Down face" },
-      { symbol: "F", desc: "Front face" },
-      { symbol: "B", desc: "Back face" },
+      { symbol: "U", desc: "Up", vc: "./notations/U.svg" },
+      { symbol: "D", desc: "Down", vc: "./notations/D.svg" },
+      { symbol: "R", desc: "Right", vc: "./notations/R.svg" },
+      { symbol: "L", desc: "Left", vc: "./notations/L.svg" },
+      { symbol: "F", desc: "Front", vc: "./notations/F.svg" },
+      { symbol: "B", desc: "Back", vc: "./notations/B.svg" },
     ],
   },
   {
-    title: "Modifiers",
+    title: "Wide Layer Turns",
     items: [
-      { symbol: "R'", desc: "Counter-clockwise (prime)" },
-      { symbol: "R2", desc: "180° turn (half)" },
-      { symbol: "( )", desc: "Triggers / fingertrick groups" },
+      { symbol: "Uw / u", desc: "Wide Up", vc: "./notations/Uw.svg" },
+      { symbol: "Dw / d", desc: "Wide Down", vc: "./notations/Dw.svg" },
+      { symbol: "Rw / r", desc: "Wide Right", vc: "./notations/Rw.svg" },
+      { symbol: "Lw / l", desc: "Wide Left", vc: "./notations/Lw.svg" },
+      { symbol: "Fw / f", desc: "Wide Front", vc: "./notations/Fw.svg" },
+      { symbol: "Bw / b", desc: "Wide Back", vc: "./notations/Bw.svg" },
     ],
   },
   {
-    title: "Wide Moves (two layers)",
+    title: "Cube Rotations & Slice Moves",
     items: [
-      { symbol: "r", desc: "R + middle (wide R)" },
-      { symbol: "l", desc: "L + middle (wide L)" },
-      { symbol: "u", desc: "U + middle (wide U)" },
-      { symbol: "d", desc: "D + middle (wide D)" },
-      { symbol: "f", desc: "F + middle (wide F)" },
-      { symbol: "b", desc: "B + middle (wide B)" },
-    ],
-  },
-  {
-    title: "Slice Moves (middle layer)",
-    items: [
-      { symbol: "M", desc: "Between R & L (R direction)" },
-      { symbol: "E", desc: "Between U & D (D direction)" },
-      { symbol: "S", desc: "Between F & B (F direction)" },
-    ],
-  },
-  {
-    title: "Cube Rotations",
-    items: [
-      { symbol: "x", desc: "Rotate whole cube (R direction)" },
-      { symbol: "y", desc: "Rotate whole cube (U direction)" },
-      { symbol: "z", desc: "Rotate whole cube (F direction)" },
+      { symbol: "x", desc: "Axis rotation", vc: "./notations/x.svg" },
+      { symbol: "y", desc: "Axis rotation", vc: "./notations/y.svg" },
+      { symbol: "z", desc: "Axis rotation", vc: "./notations/z.svg" },
+      { symbol: "M", desc: "Middle slice", vc: "./notations/M.svg" },
+      { symbol: "E", desc: "Equator slice", vc: "./notations/E.svg" },
+      { symbol: "S", desc: "Standing slice", vc: "./notations/S.svg" },
     ],
   },
 ];
@@ -63,22 +53,22 @@ export default function NotationLegend({ isOpen, onClose }: NotationLegendProps)
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label="Cube notation legend"
+      aria-label="Cube move notation guide"
     >
       <div
-        className="theme-card rounded-3xl border-2 theme-border-main theme-shadow-main p-6 max-w-xl w-full relative animate-fade-in max-h-[90vh] overflow-y-auto"
+        className="theme-card rounded-3xl border-2 theme-border-main theme-shadow-main p-6 max-w-2xl w-full relative animate-fade-in max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
           className="absolute top-3 right-3 p-1 bg-red-500 text-white border-2 theme-border-main rounded-lg hover:bg-red-400 transition-all theme-shadow-tiny active:scale-95"
-          aria-label="Close notation legend"
+          aria-label="Close move notation guide"
         >
           <X className="w-3.5 h-3.5" />
         </button>
 
         <h2 className="text-xl font-display font-black uppercase tracking-tight mb-6">
-          Notation Legend
+          Move Notation
         </h2>
 
         <div className="space-y-6">
@@ -91,12 +81,22 @@ export default function NotationLegend({ isOpen, onClose }: NotationLegendProps)
                 {group.items.map((item) => (
                   <div
                     key={item.symbol}
-                    className="flex items-center gap-2 theme-muted-bg rounded-lg border-2 theme-border-main px-3 py-2 theme-shadow-tiny"
+                    className="flex items-center gap-2 theme-muted-bg rounded-lg border-2 theme-border-main p-2 theme-shadow-tiny"
                   >
-                    <code className="text-sm font-black font-mono theme-pill-accent px-1.5 py-0.5 rounded border theme-border-main">
-                      {item.symbol}
-                    </code>
-                    <span className="text-xs font-bold">{item.desc}</span>
+                    {item.vc && (
+                      <img
+                        src={item.vc}
+                        alt={`${item.symbol} move`}
+                        className="w-[70px] h-[70px] shrink-0"
+                        loading="lazy"
+                      />
+                    )}
+                    <div className={item.vc ? "flex flex-col gap-0.5" : "flex items-center gap-2"}>
+                      <code className="text-sm font-black font-mono theme-pill-accent px-1.5 py-0.5 rounded border theme-border-main">
+                        {item.symbol}
+                      </code>
+                      <span className="text-xs font-bold leading-tight">{item.desc}</span>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -106,10 +106,7 @@ export default function NotationLegend({ isOpen, onClose }: NotationLegendProps)
 
         <div className="mt-6 pt-4 border-t-2 theme-border-main">
           <p className="text-xs theme-muted-text font-bold leading-relaxed">
-            All algorithms are written in <strong>standard WCA notation</strong>.
-            Moves are applied as if you are looking directly at that face.
-            A <code className="text-xs font-mono font-black theme-pill-accent px-1 rounded">'</code> after a move
-            means turn that face counter-clockwise.
+            All moves follow standard WCA notation.
           </p>
         </div>
       </div>
