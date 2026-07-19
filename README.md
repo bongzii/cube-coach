@@ -1,11 +1,14 @@
 # Cube Coach
 
-A Rubik's Cube OLL/PLL Trainer — Learn and practice algorithms with interactive 3D cube visualizations and a built-in stopwatch.
+A Rubik's Cube OLL/PLL/F2L trainer — learn and practice algorithms with interactive 3D cube visualizations, an in-app move-notation guide, a browsable case library, and a built-in stopwatch.
 
 ## Features
 
 - **OLL Trainer**: Practice all 57 Orientation of Last Layer algorithms
 - **PLL Trainer**: Practice all 21 Permutation of Last Layer algorithms
+- **F2L Trainer**: Practice First Two Layers cases across all four slots
+- **Move Notation Guide**: In-app reference for single-layer, wide-layer, rotation, and slice moves with diagrams
+- **Case Library**: Browse OLL/PLL/F2L cases with diagrams and multiple algorithm variants
 - **Interactive 3D Cube**: Visualize algorithms with interactive 3D cube (using `cubejs`)
 - **Built-in Timer**: Built-in stopwatch with inspection time for practice solves
 - **Algorithm Filtering**: Filter by difficulty, trigger, or search by name
@@ -85,16 +88,19 @@ src/
 │   ├── AlgorithmSelector.tsx
 │   ├── CaseImage.tsx
 │   ├── FilterBar.tsx
+│   ├── F2LSlotIndicator.tsx
 │   ├── ImageModal.tsx
 │   ├── NotationLegend.tsx
+│   ├── SessionPanel.tsx
 │   ├── StatsCards.tsx
 │   ├── TrainerControls.tsx
 │   └── TrainerTimer.tsx
-├── data/               # OLL/PLL algorithm data
+├── data/               # OLL/PLL/F2L algorithm data
 │   ├── ollCases.ts
 │   ├── ollAlgs.ts
 │   ├── pllCases.ts
-│   └── pllAlgs.ts
+│   ├── pllAlgs.ts
+│   └── f2l*/
 ├── themes.ts           # Theme configuration
 ├── App.tsx             # Main app component
 ├── main.tsx            # Entry point
@@ -103,6 +109,8 @@ src/
 public/
 ├── olls numbered/      # OLL SVG images (numbered 1-57)
 ├── plls lettered/      # PLL SVG images (lettered)
+├── f2l/                # F2L SVG images (159 cases × 4 slot views)
+├── notations/          # Move-notation SVG diagrams
 ├── logo.png            # App icon
 └── manifest.webmanifest # PWA manifest (generated)
 
