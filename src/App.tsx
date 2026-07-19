@@ -702,7 +702,7 @@ export default function App() {
 
           {/* Logo & Coach Badge */}
           <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="Cube Coach" className="h-10 w-auto" />
+            <img src="./logo.png" alt="Cube Coach" className="h-10 w-auto" />
             <h1 className="text-2xl md:text-3xl font-black tracking-tighter theme-card-text uppercase font-display">Cube Coach</h1>
           </div>
 
