@@ -58,5 +58,19 @@ export default defineConfig(({command}) => {
       hmr: process.env.DISABLE_HMR !== 'true',
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
     },
+    build: {
+      rollupOptions: {
+        output: {
+          // The case library is substantial. Keeping it separate lets browsers
+          // cache it independently of UI updates and avoids one oversized app bundle.
+          manualChunks(id) {
+            if (id.includes('/src/data/')) return 'cube-data';
+            if (id.includes('/node_modules/react/')) return 'react';
+            if (id.includes('/node_modules/react-dom/')) return 'react-dom';
+            if (id.includes('/node_modules/lucide-react/')) return 'icons';
+          },
+        },
+      },
+    },
   };
 });

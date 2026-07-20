@@ -1,6 +1,6 @@
 # Cube Coach
 
-A Rubik's Cube OLL/PLL/F2L trainer — learn and practice algorithms with interactive 3D cube visualizations, an in-app move-notation guide, a browsable case library, and a built-in stopwatch.
+A Rubik's Cube OLL/PLL/F2L trainer — learn and practice algorithms with case diagrams, an in-app move-notation guide, a browsable case library, and a built-in stopwatch.
 
 ## Features
 
@@ -9,7 +9,7 @@ A Rubik's Cube OLL/PLL/F2L trainer — learn and practice algorithms with intera
 - **F2L Trainer**: Practice First Two Layers cases across all four slots
 - **Move Notation Guide**: In-app reference for single-layer, wide-layer, rotation, and slice moves with diagrams
 - **Case Library**: Browse OLL/PLL/F2L cases with diagrams and multiple algorithm variants
-- **Interactive 3D Cube**: Visualize algorithms with interactive 3D cube (using `cubejs`)
+- **Case Diagrams**: Compare setup scrambles against bundled OLL, PLL, and F2L diagrams
 - **Built-in Timer**: Built-in stopwatch with inspection time for practice solves
 - **Algorithm Filtering**: Filter by difficulty, trigger, or search by name
 - **Progress Tracking**: Track your learning progress and solve times
@@ -21,9 +21,7 @@ A Rubik's Cube OLL/PLL/F2L trainer — learn and practice algorithms with intera
 
 - **React 19** + **TypeScript** + **Vite 6**
 - **Tailwind CSS 4** (via `@tailwindcss/vite`)
-- **Motion** (Framer Motion) for animations
 - **Lucide React** for icons
-- **Cube.js** for 3D cube visualization
 - **Vite PWA** for offline support
 - **Capacitor** for iOS/Android
 - **Electron** for desktop

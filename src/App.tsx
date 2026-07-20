@@ -37,6 +37,42 @@ import { InspectionAlerts } from "./lib/audio";
 import { registerSW } from "virtual:pwa-register";
 
 export type CaseItem = OLLCase | PLLCase | F2LCase;
+type MasteryStatus = "Mastered" | "Learning" | "Not Started";
+type MasteryByCaseType = Record<CaseType, Record<number, MasteryStatus>>;
+const CASE_TYPES: CaseType[] = ["f2l", "oll", "pll"];
+
+const caseKey = (type: CaseType, id: number) => `${type}-${id}`;
+
+function defaultMastery(cases: CaseItem[]): Record<number, MasteryStatus> {
+  return Object.fromEntries(cases.map((c) => [c.id, "Not Started"]));
+}
+
+function loadMastery(): MasteryByCaseType {
+  const casesByType: Record<CaseType, CaseItem[]> = { f2l: f2lCases, oll: ollCases, pll: pllCases };
+  const defaults = Object.fromEntries(
+    CASE_TYPES.map((type) => [type, defaultMastery(casesByType[type])])
+  ) as MasteryByCaseType;
+
+  try {
+    const saved = localStorage.getItem("cube-coach-mastery-v2");
+    if (saved) {
+      const parsed = JSON.parse(saved) as Partial<MasteryByCaseType>;
+      return CASE_TYPES.reduce((all, type) => ({
+        ...all,
+        [type]: { ...defaults[type], ...parsed[type] },
+      }), {} as MasteryByCaseType);
+    }
+
+    // One-time migration from the original per-mode keys.
+    return CASE_TYPES.reduce((all, type) => {
+      const legacy = localStorage.getItem(`ll-mastery-${type}`);
+      return { ...all, [type]: { ...defaults[type], ...(legacy ? JSON.parse(legacy) : {}) } };
+    }, {} as MasteryByCaseType);
+  } catch (e) {
+    console.error(e);
+    return defaults;
+  }
+}
 
 // ── Session persistence helpers ────────────────────────────────────
 const genId = () =>
@@ -200,24 +236,9 @@ export default function App() {
   const [selectedStatus, setSelectedStatus] = useState<string>("All");
   const [viewMode, setViewMode] = useState<"grid" | "trainer">("grid");
 
-  // User study progress (saved in localStorage, keyed by caseType)
-  const storageKey = (key: string) => `${key}-${caseType}`;
-
-  const [masteryData, setMasteryData] = useState<Record<number, "Mastered" | "Learning" | "Not Started">>(() => {
-    try {
-      const saved = localStorage.getItem(storageKey("ll-mastery"));
-      if (saved) {
-        return JSON.parse(saved);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-    const initial: Record<number, "Mastered" | "Learning" | "Not Started"> = {};
-    cases.forEach(c => {
-      initial[c.id] = "Not Started";
-    });
-    return initial;
-  });
+  // Keep all three modes together so changing modes can never overwrite progress.
+  const [masteryByCaseType, setMasteryByCaseType] = useState<MasteryByCaseType>(loadMastery);
+  const masteryData = masteryByCaseType[caseType];
 
   // Custom scrambles (overrides saved to localStorage)
   const [customScrambles, setCustomScrambles] = useState<Record<string, string>>(() => {
@@ -298,25 +319,30 @@ export default function App() {
   const timerStartRef = useRef<number>(0);
   const timerPhaseRef = useRef<TimerPhase>("idle");
 
+  const sessionsForCaseType = useMemo(
+    () => sessions.filter((s) => s.caseType === caseType),
+    [sessions, caseType]
+  );
+
   const activeSession = useMemo(
-    () => sessions.find((s) => s.id === activeSessionId) ?? sessions[0],
-    [sessions, activeSessionId]
+    () => sessionsForCaseType.find((s) => s.id === activeSessionId) ?? sessionsForCaseType[0],
+    [sessionsForCaseType, activeSessionId]
   );
 
   // Derived per-case solve history (source of truth = sessions). Recomputed
   // whenever sessions change so grid PB/Avg and dashboard best stay in sync
   // with penalty edits and deleted solves.
   const solveHistory = useMemo(() => {
-    const map: Record<number, { date: string; time: number }[]> = {};
+    const map: Record<string, { date: string; time: number }[]> = {};
     for (const s of sessions) {
       for (const sv of s.solves) {
-        if (sv.penalty === "DNF" || sv.time === null) continue;
+        if (sv.caseType !== caseType || sv.penalty === "DNF" || sv.time === null) continue;
         const effective = sv.time + (sv.penalty === "+2" ? 2 : 0);
-        (map[sv.caseId] ||= []).push({ date: new Date(sv.date).toLocaleDateString(), time: effective });
+        (map[caseKey(sv.caseType, sv.caseId)] ||= []).push({ date: new Date(sv.date).toLocaleDateString(), time: effective });
       }
     }
     return map;
-  }, [sessions]);
+  }, [sessions, caseType]);
 
   // Close enlarged image on Escape key
   useEffect(() => {
@@ -327,10 +353,10 @@ export default function App() {
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
-  // Save progress
+  // Save all modes as one atomic progress record.
   useEffect(() => {
-    localStorage.setItem(storageKey("ll-mastery"), JSON.stringify(masteryData));
-  }, [masteryData, caseType]);
+    localStorage.setItem("cube-coach-mastery-v2", JSON.stringify(masteryByCaseType));
+  }, [masteryByCaseType]);
 
   // Persist sessions, active session, and timer settings
   useEffect(() => {
@@ -372,10 +398,10 @@ export default function App() {
     setTimeout(() => setCopiedScramble(null), 1500);
   };
 
-  const updateStatus = (id: number, status: "Mastered" | "Learning" | "Not Started") => {
-    setMasteryData(prev => ({
+  const updateStatus = (id: number, status: MasteryStatus) => {
+    setMasteryByCaseType(prev => ({
       ...prev,
-      [id]: status
+      [caseType]: { ...prev[caseType], [id]: status },
     }));
   };
 
@@ -393,15 +419,13 @@ export default function App() {
     return setups[idx];
   }
 
-  const handleGenerate = (id: number) => {
+  const handleGenerate = (id: number): string => {
     const key = `${caseType}-${id}`;
     const scramble = generateScramble(id);
     if (scramble) {
       setCustomScrambles(prev => ({ ...prev, [key]: scramble }));
-      navigator.clipboard.writeText(scramble);
-      setCopiedId(id);
-      setTimeout(() => setCopiedId(null), 1500);
     }
+    return scramble;
   };
 
   // Filtered cases
@@ -666,7 +690,7 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trainerRunId, viewMode]);
   const getCaseStats = (caseId: number) => {
-    const records = solveHistory[caseId] || [];
+    const records = solveHistory[caseKey(caseType, caseId)] || [];
     if (records.length === 0) return { best: null, avg: null, count: 0 };
     const best = Math.min(...records.map(r => r.time));
     const avg = parseFloat((records.reduce((sum, r) => sum + r.time, 0) / records.length).toFixed(2));
@@ -680,14 +704,11 @@ export default function App() {
   };
 
   const handleResetProgress = () => {
-    if (confirm("Are you sure you want to reset your learning stats and solve times? This cannot be undone.")) {
-      const initial: Record<number, "Mastered" | "Learning" | "Not Started"> = {};
-      cases.forEach(c => {
-        initial[c.id] = "Not Started";
-      });
-      setMasteryData(initial);
-      setSessions([makeSession("Default Session", "standard", caseType)]);
-      setActiveSessionId(null);
+    if (confirm(`Reset ${caseType.toUpperCase()} learning progress and solve times? This cannot be undone.`)) {
+      setMasteryByCaseType(prev => ({ ...prev, [caseType]: defaultMastery(cases) }));
+      const replacement = makeSession("Default Session", "standard", caseType);
+      setSessions(prev => [...prev.filter((s) => s.caseType !== caseType), replacement]);
+      setActiveSessionId(replacement.id);
       setActiveTrainerCase(null);
     }
   };
@@ -704,7 +725,15 @@ export default function App() {
     setSelectedGroup("All");
     setSelectedStatus("All");
     setSearchTerm("");
-  }, [caseType]);
+    const firstSession = sessions.find((s) => s.caseType === caseType);
+    if (firstSession) {
+      setActiveSessionId(firstSession.id);
+    } else {
+      const newSession = makeSession("Default Session", "standard", caseType);
+      setSessions((prev) => [...prev, newSession]);
+      setActiveSessionId(newSession.id);
+    }
+  }, [caseType, groups, sessions]);
 
   return (
     <div id="ll-app-container" className="min-h-screen theme-bg-main theme-text-main font-sans pb-12 transition-colors duration-300">
@@ -992,8 +1021,8 @@ export default function App() {
                           <div className="flex gap-1 shrink-0">
                             <button
                               onClick={() => {
-                                handleGenerate(llCase.id);
-                                handleCopy(getScramble(llCase.id), llCase.id);
+                                const scramble = handleGenerate(llCase.id);
+                                if (scramble) handleCopy(scramble, llCase.id);
                               }}
                               className="theme-control-surface p-2 rounded-lg transition-all theme-shadow-tiny hover:shadow-none active:scale-95"
                               title="Generate new scramble"
@@ -1108,9 +1137,8 @@ export default function App() {
                 onTogglePenalty={(p) => setPendingPenalty(p)}
               />
               <SessionPanel
-                sessions={sessions}
+                sessions={sessionsForCaseType}
                 activeSessionId={activeSessionId}
-                caseType={caseType}
                 timerSettings={timerSettings}
                 onSelectSession={setActiveSessionId}
                 onCreateSession={createSession}

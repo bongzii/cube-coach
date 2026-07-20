@@ -15,10 +15,11 @@
     "electron:dev": "concurrently -k \"vite --port=3000\" \"sleep 3 && electron .\"",
     "electron:build": "vite build && electron-builder --mac",
     "generate-scrambles": "node scripts/generate-scrambles.mjs",
-    "cli": "python3 scripts/cli.py"
+    "cli": "python3 scripts/cli.py",
+    "test": "node test-normalize.js",
+    "test:integration": "node test-url-generation.cjs && node test-simple-formats.cjs"
   },
   "dependencies": {
-    "@capacitor/cli": "^8.4.2",
     "@capacitor/core": "^8.4.2",
     "@capacitor/ios": "^8.4.2",
     "@tailwindcss/vite": "^4.1.14",
@@ -28,6 +29,7 @@
     "react-dom": "^19.0.1"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.4.2",
     "@types/lodash": "^4.17.24",
     "@types/node": "^22.14.0",
     "@types/ramda": "^0.32.0",

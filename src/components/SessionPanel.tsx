@@ -5,7 +5,6 @@ import { computeSessionStats, formatSeconds, formatSolveTime, penaltyLabel } fro
 interface SessionPanelProps {
   sessions: Session[];
   activeSessionId: string | null;
-  caseType: "f2l" | "oll" | "pll";
   timerSettings: TimerSettings;
   onSelectSession: (id: string) => void;
   onCreateSession: (name: string, type: SessionType) => void;
@@ -19,7 +18,6 @@ interface SessionPanelProps {
 export default function SessionPanel({
   sessions,
   activeSessionId,
-  caseType,
   timerSettings,
   onSelectSession,
   onCreateSession,
