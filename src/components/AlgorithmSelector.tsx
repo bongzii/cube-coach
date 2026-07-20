@@ -3,6 +3,7 @@ import { ollAlgs } from "../data/ollAlgs";
 import { pllAlgs } from "../data/pllAlgs";
 import { f2lAlgs } from "../data/f2lAlgs";
 import type { CaseItem } from "../App";
+import { moveCount, f2lMoveCount } from "../utils/moveCount";
 
 interface AlgorithmSelectorProps {
   llCase: CaseItem;
@@ -27,35 +28,55 @@ export default function AlgorithmSelector({
       ? pllAlgs[llCase.name]
       : f2lAlgs[llCase.id];
   const algCount = solverAlgs?.length ?? 0;
-  const variantKeys = ["primary", "alt1", "alt2", "alt3", "alt4", "alt5"] as const;
+  const isF2L = caseType === "f2l";
+
+  // F2L uses numeric labels (1, 2, 3, ...) in move-count order; the rest keep
+  // the Pri / Alt N convention.
+  const variantKeys = isF2L
+    ? Array.from({ length: algCount }, (_, i) => String(i + 1))
+    : ["primary", "alt1", "alt2", "alt3", "alt4", "alt5"];
   const variantLabels: Record<string, string> = { primary: "Pri", alt1: "Alt 1", alt2: "Alt 2", alt3: "Alt 3", alt4: "Alt 4", alt5: "Alt 5" };
-  const variant = activeVariant || "primary";
-  let currentAlg = solverAlgs?.[0] || llCase.setup.replace(/^D /, '').replace(/ D'$/, '');
-  if (variant !== "primary") {
-    const idx = parseInt(variant.replace("alt", ""));
-    if (idx < algCount) {
-      currentAlg = solverAlgs![idx];
-    }
+  const variant = activeVariant || (isF2L ? "1" : "primary");
+
+  let currentAlg: string;
+  if (isF2L) {
+    currentAlg = solverAlgs?.[parseInt(variant, 10) - 1] ?? solverAlgs?.[0] ?? "";
+  } else if (variant === "primary") {
+    currentAlg = solverAlgs?.[0] ?? llCase.setup.replace(/^D /, '').replace(/ D'$/, '');
+  } else {
+    const idx = parseInt(variant.replace("alt", ""), 10);
+    currentAlg = idx < algCount ? solverAlgs![idx] : (solverAlgs?.[0] ?? llCase.setup.replace(/^D /, '').replace(/ D'$/, ''));
   }
-  const visibleVariants = variantKeys.filter(k => k === "primary" || (parseInt(k.replace("alt", "")) < algCount));
+  if (!currentAlg) currentAlg = llCase.setup.replace(/^D /, '').replace(/ D'$/, '');
+
+  const visibleVariants = isF2L
+    ? variantKeys
+    : (variantKeys as string[]).filter(k => k === "primary" || parseInt(k.replace("alt", ""), 10) < algCount);
 
   return (
     <div className="mt-2 pt-2 border-t theme-border-main px-4">
       {visibleVariants.length > 1 && (
         <div className="flex items-center gap-2 mb-1">
           <span className="text-[9px] font-black theme-muted-text uppercase">Algs:</span>
-          <select
-            value={variant}
-            onChange={(e) => onSelectVariant(llCase.id, e.target.value)}
-            className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-xl border-2 theme-border-main theme-control-surface cursor-pointer"
-          >
+          <div className="flex gap-1">
             {visibleVariants.map(k => (
-              <option key={k} value={k}>{variantLabels[k]}</option>
+              <button
+                key={k}
+                onClick={() => onSelectVariant(llCase.id, k)}
+                className={`px-2 py-0.5 rounded-lg font-black text-[10px] uppercase transition-all active:scale-95 ${
+                  variant === k ? "theme-btn-primary" : "theme-btn-ghost"
+                }`}
+              >
+                 {isF2L ? k : variantLabels[k]}
+              </button>
             ))}
-          </select>
+          </div>
         </div>
       )}
       <div className="flex items-start gap-2">
+        <span className="text-[9px] font-black theme-muted-text uppercase shrink-0 mt-0.5">
+          Moves: {isF2L ? f2lMoveCount(currentAlg) : moveCount(currentAlg)}
+        </span>
         <span className="text-xs font-black font-mono break-words flex-1">
           {currentAlg}
         </span>

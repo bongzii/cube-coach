@@ -4,6 +4,7 @@ import { CaseItem } from "../App";
 import { ollAlgs } from "../data/ollAlgs";
 import { pllAlgs } from "../data/pllAlgs";
 import { f2lAlgs } from "../data/f2lAlgs";
+import { moveCount, f2lMoveCount } from "../utils/moveCount";
 
 interface ImageModalProps {
   enlargedImageId: number | null;
@@ -140,6 +141,9 @@ export default function ImageModal({ enlargedImageId, onClose, cases, caseType, 
                 <span className="text-sm font-black font-mono text-green-600 break-words">
                   {f2lAlgs[enlargedCase.id][0]}
                 </span>
+                <span className="text-[9px] font-black text-green-600 uppercase block mt-1">
+                  Moves: {f2lMoveCount(f2lAlgs[enlargedCase.id][0])}
+                </span>
                 <button
                   onClick={() => navigator.clipboard.writeText(f2lAlgs[enlargedCase.id][0])}
                   className="shrink-0 p-1.5 theme-control-surface rounded-lg border-2 theme-border-main transition-all active:scale-95"
@@ -161,6 +165,7 @@ export default function ImageModal({ enlargedImageId, onClose, cases, caseType, 
                   >
                     <Copy className="w-2.5 h-2.5" />
                     <span className="truncate max-w-[250px]">{alg}</span>
+                    <span className="text-[9px] font-black theme-muted-text uppercase ml-0.5">Moves: {f2lMoveCount(alg)}</span>
                   </button>
                 ))}
               </div>

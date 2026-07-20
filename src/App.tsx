@@ -134,52 +134,64 @@ export default function App() {
   }, [caseType]);
 
   const GROUP_COLORS: Record<string, string> = {
-    "Dot": "#6b7280",
-    "Square Shape": "#f59e0b",
-    "Small Lightning Bolt": "#a855f7",
-    "Fish Shape": "#10b981",
-    "Knight Move Shape": "#f97316",
-    "Corners Oriented": "#06b6d4",
-    "Cross": "#3b82f6",
-    "Awkward Shape": "#ec4899",
-    "P Shape": "#8b5cf6",
-    "T Shape": "#14b8a6",
-    "C Shape": "#f43f5e",
-    "W Shape": "#6366f1",
-    "Big Lightning Bolt": "#eab308",
-    "Small L Shape": "#84cc16",
-    "I Shape": "#0ea5e9",
-    "U": "#3b82f6",
-    "H": "#ef4444",
-    "Z": "#10b981",
-    "A": "#8b5cf6",
-    "E": "#f97316",
-    "F": "#06b6d4",
-    "G": "#84cc16",
-    "J": "#f43f5e",
-    "N": "#a855f7",
-    "R": "#eab308",
-    "T": "#3b82f6",
-    "V": "#10b981",
-    "Y": "#f97316",
-    "Basic Inserts": "#3b82f6",
-    "Pieces on Top / White facing Front / Edge oriented": "#a855f7",
-    "Pieces on Top / White facing Front / Edge unoriented": "#8b5cf6",
-    "Pieces on Top / White facing Side / Edge oriented": "#f97316",
-    "Pieces on Top / White facing Side / Edge unoriented": "#10b981",
-    "Pieces on Top / White facing Up / Edge oriented": "#06b6d4",
-    "Pieces on Top / White facing Up / Edge unoriented": "#84cc16",
-    "Edge solved": "#10b981",
-    "Edge flipped": "#f43f5e",
-    "Corner on Bottom / Edge on Top / Edge oriented": "#eab308",
-    "Corner on Bottom / Edge on Top / Edge unoriented": "#0ea5e9",
-    "Basic Back Slot": "#6366f1",
-    "Advanced F2L": "#f59e0b",
-    "Expert F2L": "#ef4444",
-    "basic": "#3b82f6",
-    "basicBack": "#6366f1",
-    "advanced": "#f59e0b",
-    "expert": "#ef4444",
+    "Dot": "#ec4899",
+    "Square Shape": "#6ff0bd",
+    "Corners Oriented": "#1868e6",
+    "Awkward Shape": "#a2634b",
+    "P Shape": "#e1a2ff",
+    "T Shape": "#ff943f",
+    "C Shape": "#2e8489",
+    "W Shape": "#c9cf78",
+    "Big Lightning Bolt": "#66ddff",
+    "Small L Shape": "#119121",
+    "I Shape": "#875da0",
+    "Fish Shape": "#ad5437",
+    "Knight Move Shape": "#f9abdb",
+    "Small Lightning Bolt": "#8db0f7",
+    "Cross": "#feac50",
+    "A": "#678cd5",
+    "E": "#6fdf55",
+    "F": "#52d0d6",
+    "G": "#7d842d",
+    "H": "#6da074",
+    "J": "#ff869e",
+    "N": "#8a62f1",
+    "R": "#a7ab4b",
+    "T": "#c656d1",
+    "U": "#e29c65",
+    "V": "#e16243",
+    "Y": "#81c0d0",
+    "Z": "#9abaff",
+    "Advanced F2L": "#4eb67c",
+    "Basic Backslot": "#eb424d",
+    "Basic Cases / Free Slot": "#ff8fff",
+    "Basic F2L": "#437ab6",
+    "Basic Inserts": "#c36d8e",
+    "Corner in Opposite Slot": "#08abff",
+    "Corner is solved": "#ba8de7",
+    "Corner on Bottom / Edge on Top / Edge oriented": "#1dade6",
+    "Corner on Bottom / Edge on Top / Edge unoriented": "#b17617",
+    "Edge flipped": "#6e7c40",
+    "Edge in Opposite Slot": "#ffa39f",
+    "Edge solved": "#738cff",
+    "Expert F2L": "#b03f8d",
+    "Flipped edge & corner in adjacent slot": "#cb302b",
+    "Other easy cases": "#338453",
+    "Pair in wrong slot": "#6c8f95",
+    "Pieces on Top / White facing Back / Edge oriented": "#f37344",
+    "Pieces on Top / White facing Back / Edge unoriented": "#56c673",
+    "Pieces on Top / White facing Front / Edge oriented": "#c7a500",
+    "Pieces on Top / White facing Front / Edge unoriented": "#48b1a2",
+    "Pieces on Top / White facing Side / Edge oriented": "#ff84c2",
+    "Pieces on Top / White facing Side / Edge unoriented": "#72b02f",
+    "Pieces on Top / White facing Up / Edge oriented": "#6663c3",
+    "Pieces on Top / White facing Up / Edge unoriented": "#68e6ff",
+    "Slot in Back / Corner in Adjacent Front Slot": "#bc3c5f",
+    "Slot in Back / Edge in Adjacent Front Slot": "#de7ccc",
+    "Slot in Front / Corner in Adjacent Slot": "#c3b7ff",
+    "Slot in Front / White facing Front": "#5ce3b6",
+    "Slot in Front / White facing Side": "#62d1ff",
+    "Slot in Front / White facing Up": "#b9d736",
   };
 
   // Search & Filter state
@@ -259,7 +271,7 @@ export default function App() {
   }, []);
 
   // Active algorithm variant per case
-  const [activeAlgVariant, setActiveAlgVariant] = useState<Record<number, "primary" | "alt1" | "alt2" | "alt3" | "alt4" | "alt5">>({});
+  const [activeAlgVariant, setActiveAlgVariant] = useState<Record<number, string>>({});
 
   // Rotations state
   const [showNotationLegend, setShowNotationLegend] = useState(false);
@@ -867,6 +879,7 @@ export default function App() {
                 {filteredCases.map((llCase, cardIndex) => {
                   const currentStatus = masteryData[llCase.id] || "Not Started";
                   const caseStats = getCaseStats(llCase.id);
+                  const colorKey = caseType === "f2l" ? llCase.category : llCase.group;
 
                 return (
                   <div
@@ -875,7 +888,7 @@ export default function App() {
                     className="theme-card rounded-3xl border-2 theme-border-main flex flex-col overflow-hidden group theme-shadow-main h-full theme-card-glow opacity-0 animate-fade-in-up"
                     style={{ animationDelay: `${cardIndex * 50}ms` }}>
                     {/* Group color stripe */}
-                    <div className="h-1 shrink-0" style={{ backgroundColor: GROUP_COLORS[llCase.group] || "#ccc" }}></div>
+                    <div className="h-1 shrink-0" style={{ backgroundColor: GROUP_COLORS[colorKey] || "#ccc" }}></div>
                     {/* Top Header details */}
                     <div className="p-4 flex items-start justify-between gap-2 border-b theme-border-main theme-muted-bg">
                       <div className="flex items-center gap-2">
@@ -909,11 +922,13 @@ export default function App() {
                           {llCase.name}
                         </h4>
                         <span className="text-[11px] font-mono theme-muted-text font-semibold uppercase tracking-wider block mt-0.5 flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full inline-block shrink-0" style={{ backgroundColor: GROUP_COLORS[llCase.group] || "#999" }}></span>
+                          <span className="w-2 h-2 rounded-full inline-block shrink-0" style={{ backgroundColor: GROUP_COLORS[colorKey] || "#999" }}></span>
                           {llCase.group}
-                          <span className="text-[10px] font-mono theme-muted-text font-bold px-1.5 py-0.5 theme-chip rounded uppercase">
-                            {llCase.category}
-                          </span>
+                          {caseType === "f2l" && (
+                            <span className="text-[10px] font-mono theme-muted-text font-bold px-1.5 py-0.5 theme-chip rounded uppercase">
+                              {llCase.category}
+                            </span>
+                          )}
                         </span>
                       </div>
 
@@ -998,9 +1013,9 @@ export default function App() {
                         <AlgorithmSelector
                           llCase={llCase}
                           caseType={caseType}
-                          activeVariant={activeAlgVariant[llCase.id] || "primary"}
+                          activeVariant={activeAlgVariant[llCase.id] || (caseType === "f2l" ? "1" : "primary")}
                           copiedId={copiedId}
-                          onSelectVariant={(id, variant) => setActiveAlgVariant(prev => ({...prev, [id]: variant as "primary" | "alt1" | "alt2" | "alt3" | "alt4" | "alt5"}))}
+                          onSelectVariant={(id, variant) => setActiveAlgVariant(prev => ({...prev, [id]: variant}))}
                           onCopy={(alg, id) => {
                             navigator.clipboard.writeText(alg);
                             setCopiedId(id);
