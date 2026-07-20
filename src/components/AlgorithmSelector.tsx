@@ -30,28 +30,21 @@ export default function AlgorithmSelector({
   const algCount = solverAlgs?.length ?? 0;
   const isF2L = caseType === "f2l";
 
-  // F2L uses numeric labels (1, 2, 3, ...) in move-count order; the rest keep
-  // the Pri / Alt N convention.
-  const variantKeys = isF2L
-    ? Array.from({ length: algCount }, (_, i) => String(i + 1))
-    : ["primary", "alt1", "alt2", "alt3", "alt4", "alt5"];
-  const variantLabels: Record<string, string> = { primary: "Pri", alt1: "Alt 1", alt2: "Alt 2", alt3: "Alt 3", alt4: "Alt 4", alt5: "Alt 5" };
-  const variant = activeVariant || (isF2L ? "1" : "primary");
+  // Algs are shown shortest-first (data is pre-sorted by moveCount) and labeled
+  // numerically (1, 2, 3, ...) for every case type.
+  const variantKeys = Array.from({ length: algCount }, (_, i) => String(i + 1));
+  const variant = activeVariant || "1";
 
   let currentAlg: string;
   if (isF2L) {
     currentAlg = solverAlgs?.[parseInt(variant, 10) - 1] ?? solverAlgs?.[0] ?? "";
-  } else if (variant === "primary") {
-    currentAlg = solverAlgs?.[0] ?? llCase.setup.replace(/^D /, '').replace(/ D'$/, '');
   } else {
-    const idx = parseInt(variant.replace("alt", ""), 10);
+    const idx = parseInt(variant, 10) - 1;
     currentAlg = idx < algCount ? solverAlgs![idx] : (solverAlgs?.[0] ?? llCase.setup.replace(/^D /, '').replace(/ D'$/, ''));
   }
   if (!currentAlg) currentAlg = llCase.setup.replace(/^D /, '').replace(/ D'$/, '');
 
-  const visibleVariants = isF2L
-    ? variantKeys
-    : (variantKeys as string[]).filter(k => k === "primary" || parseInt(k.replace("alt", ""), 10) < algCount);
+  const visibleVariants = variantKeys;
 
   return (
     <div className="mt-2 pt-2 border-t theme-border-main px-4">
@@ -67,8 +60,8 @@ export default function AlgorithmSelector({
                   variant === k ? "theme-btn-primary" : "theme-btn-ghost"
                 }`}
               >
-                 {isF2L ? k : variantLabels[k]}
-              </button>
+                 {k}
+               </button>
             ))}
           </div>
         </div>

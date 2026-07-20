@@ -70,6 +70,7 @@ export default function ImageModal({ enlargedImageId, onClose, cases, caseType, 
             <div className="mt-3">
               <span className="text-[9px] font-black text-blue-600 uppercase block mb-1">Solution:</span>
               <div className="flex items-center justify-center gap-2">
+                <span className="px-2 py-0.5 rounded-lg font-black text-[10px] theme-btn-primary">{1}</span>
                 <span className="text-sm font-black font-mono text-blue-600 break-words">
                   {ollAlgs[enlargedCase.id][0]}
                 </span>
@@ -89,11 +90,12 @@ export default function ImageModal({ enlargedImageId, onClose, cases, caseType, 
             <div className="mt-3 pt-3 border-t-2 theme-border-main">
               <span className="text-[9px] font-black theme-muted-text uppercase block mb-1.5">Alternate Algs:</span>
               <div className="flex flex-wrap gap-1.5 justify-center">
-                {ollAlgs[enlargedCase.id].slice(1).map((alg, i) => (
+                {ollAlgs[enlargedCase.id].map((alg, i) => i === 0 ? null : (
                   <button key={i}
                     onClick={() => navigator.clipboard.writeText(alg)}
                     className="text-[10px] font-mono font-bold theme-control-surface rounded-lg px-2 py-1 transition-all flex items-center gap-1 active:scale-95"
                   >
+                    <span className="px-1.5 py-0.5 rounded-lg font-black text-[9px] theme-btn-ghost">{i + 1}</span>
                     <Copy className="w-2.5 h-2.5" />
                     <span className="truncate max-w-[250px]">{alg}</span>
                   </button>
@@ -105,6 +107,7 @@ export default function ImageModal({ enlargedImageId, onClose, cases, caseType, 
             <div className="mt-3">
               <span className="text-[9px] font-black text-blue-600 uppercase block mb-1">Solution:</span>
               <div className="flex items-center justify-center gap-2">
+                <span className="px-2 py-0.5 rounded-lg font-black text-[10px] theme-btn-primary">{1}</span>
                 <span className="text-sm font-black font-mono text-blue-600 break-words">
                   {pllAlgs[enlargedCase.name][0]}
                 </span>
@@ -122,11 +125,12 @@ export default function ImageModal({ enlargedImageId, onClose, cases, caseType, 
             <div className="mt-3 pt-3 border-t-2 theme-border-main">
               <span className="text-[9px] font-black theme-muted-text uppercase block mb-1.5">Alternate Algs:</span>
               <div className="flex flex-wrap gap-1.5 justify-center">
-                {pllAlgs[enlargedCase.name].slice(1).map((alg, i) => (
+                {pllAlgs[enlargedCase.name].map((alg, i) => i === 0 ? null : (
                   <button key={i}
                     onClick={() => navigator.clipboard.writeText(alg)}
                     className="text-[10px] font-mono font-bold theme-control-surface rounded-lg px-2 py-1 transition-all flex items-center gap-1 active:scale-95"
                   >
+                    <span className="px-1.5 py-0.5 rounded-lg font-black text-[9px] theme-btn-ghost">{i + 1}</span>
                     <Copy className="w-2.5 h-2.5" />
                     <span className="truncate max-w-[250px]">{alg}</span>
                   </button>
@@ -138,6 +142,7 @@ export default function ImageModal({ enlargedImageId, onClose, cases, caseType, 
             <div className="mt-3">
               <span className="text-[9px] font-black text-green-600 uppercase block mb-1">Solution:</span>
               <div className="flex items-center justify-center gap-2">
+                <span className="px-2 py-0.5 rounded-lg font-black text-[10px] theme-btn-primary">{1}</span>
                 <span className="text-sm font-black font-mono text-green-600 break-words">
                   {f2lAlgs[enlargedCase.id][0]}
                 </span>
@@ -158,11 +163,12 @@ export default function ImageModal({ enlargedImageId, onClose, cases, caseType, 
             <div className="mt-3 pt-3 border-t-2 theme-border-main">
               <span className="text-[9px] font-black theme-muted-text uppercase block mb-1.5">Alternate Algs:</span>
               <div className="flex flex-wrap gap-1.5 justify-center">
-                {f2lAlgs[enlargedCase.id].slice(1).map((alg, i) => (
+                {f2lAlgs[enlargedCase.id].map((alg, i) => i === 0 ? null : (
                   <button key={i}
                     onClick={() => navigator.clipboard.writeText(alg)}
                     className="text-[10px] font-mono font-bold theme-control-surface rounded-lg px-2 py-1 transition-all flex items-center gap-1 active:scale-95"
                   >
+                    <span className="px-1.5 py-0.5 rounded-lg font-black text-[9px] theme-btn-ghost">{i + 1}</span>
                     <Copy className="w-2.5 h-2.5" />
                     <span className="truncate max-w-[250px]">{alg}</span>
                     <span className="text-[9px] font-black theme-muted-text uppercase ml-0.5">Moves: {f2lMoveCount(alg)}</span>

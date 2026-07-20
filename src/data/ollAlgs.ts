@@ -1,4 +1,6 @@
-export const ollAlgs: Record<number, string[]> = {
+import { moveCount } from "../utils/moveCount";
+
+const rawOllAlgs: Record<number, string[]> = {
   1: ["R U2 R' R' F R F' U2 R' F R F'"],
   2: ["r U r' U2 r U2 R' U2 R U' r'", "y' F R U R' U' F' f R U R' U' f'", "y' F R U R' U' S R U R' U' f'"],
   3: ["r' R2 U R' U r U2 r' U M'", "y F U R U' R' F' U F R U R' U' F'", "y' f R U R' U' f' U' F R U R' U' F'"],
@@ -57,3 +59,7 @@ export const ollAlgs: Record<number, string[]> = {
   56: ["(r' U' r) U' R' U R U' R' U R r' U r", "(r U r') U R U' R' U R U' R' (r U' r')", "(r U r') U R U' R' U R U' M' U' r'"],
   57: ["R U R' U' M' U R U' r'"],
 };
+
+export const ollAlgs: Record<number, string[]> = Object.fromEntries(
+  Object.entries(rawOllAlgs).map(([k, v]) => [k, [...v].sort((a, b) => moveCount(a) - moveCount(b))])
+) as Record<number, string[]>;

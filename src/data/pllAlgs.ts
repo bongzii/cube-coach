@@ -1,4 +1,6 @@
-export const pllAlgs: Record<string, string[]> = {
+import { moveCount } from "../utils/moveCount";
+
+const rawPllAlgs: Record<string, string[]> = {
   "H": ["M2 U M2 U2 M2 U M2", "M2 U' M2 U2 M2 U' M2"],
   "Z": ["M' U M2 U M2 U M' U2 M2", "y M' U' M2 U' M2 U' M' U2 M2", "y M2 U M2 U M' U2 M2 U2 M'", "M2 U' M2 U' M' U2 M2 U2 M'"],
   "Ua": ["M2 U M U2 M' U M2", "R U' R U R U R U' R' U' R2", "y2 R2 U' R' U' R U R U R U' R"],
@@ -21,3 +23,7 @@ export const pllAlgs: Record<string, string[]> = {
   "Gc": ["R2 U' R U' R U R' U R2 (U D') R U' R' D", "y2 R2 F2 R U2 R U2 R' F R U R' U' R' F R2", "R2 u' R U' R U R' u R2 y R U' R'"],
   "Gd": ["R U R' (U' D) R2 U' R U' R' U R' U R2 D'", "R U R' y' R2 u' R U' R' U R' u R2"],
 };
+
+export const pllAlgs: Record<string, string[]> = Object.fromEntries(
+  Object.entries(rawPllAlgs).map(([k, v]) => [k, [...v].sort((a, b) => moveCount(a) - moveCount(b))])
+);

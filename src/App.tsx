@@ -1013,7 +1013,7 @@ export default function App() {
                         <AlgorithmSelector
                           llCase={llCase}
                           caseType={caseType}
-                          activeVariant={activeAlgVariant[llCase.id] || (caseType === "f2l" ? "1" : "primary")}
+                          activeVariant={activeAlgVariant[llCase.id] || "1"}
                           copiedId={copiedId}
                           onSelectVariant={(id, variant) => setActiveAlgVariant(prev => ({...prev, [id]: variant}))}
                           onCopy={(alg, id) => {
