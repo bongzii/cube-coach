@@ -1,20 +1,19 @@
-import { Award, BookMarked, Circle, TrendingUp } from "lucide-react";
+import { Award, BookMarked, Circle } from "lucide-react";
 
 interface StatsCardsProps {
   masteredCount: number;
   learningCount: number;
   notStartedCount: number;
   totalCases: number;
-  bestSolve: { time: number; count: number } | null;
 }
 
-export default function StatsCards({ masteredCount, learningCount, notStartedCount, totalCases, bestSolve }: StatsCardsProps) {
+export default function StatsCards({ masteredCount, learningCount, notStartedCount, totalCases }: StatsCardsProps) {
   const masteredPct = totalCases > 0 ? Math.round((masteredCount / totalCases) * 100) : 0;
   const learningPct = totalCases > 0 ? Math.round((learningCount / totalCases) * 100) : 0;
   const notStartedPct = totalCases > 0 ? Math.round((notStartedCount / totalCases) * 100) : 0;
 
   return (
-    <section id="ll-statistics" className="mb-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+    <section id="ll-statistics" className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
       <div className="theme-card p-5 rounded-3xl border-2 theme-border-main flex items-center gap-4 relative overflow-hidden theme-shadow-small">
         <div className="p-2.5 theme-pill-accent-soft text-green-600 rounded-xl border-2 theme-border-main theme-shadow-tiny shrink-0">
           <Award className="w-5 h-5" />
@@ -66,26 +65,6 @@ export default function StatsCards({ masteredCount, learningCount, notStartedCou
         <div className="text-right text-xs font-black font-mono text-red-600 self-start">{notStartedPct}%</div>
       </div>
 
-      <div className="theme-card p-5 rounded-3xl border-2 theme-border-main flex items-center gap-4 relative overflow-hidden theme-shadow-small">
-        <div className="p-2.5 theme-pill-accent-soft text-yellow-500 rounded-xl border-2 theme-border-main theme-shadow-tiny shrink-0">
-          <TrendingUp className="w-5 h-5" />
-        </div>
-        <div className="flex-1">
-          <span className="text-xs theme-muted-text font-bold tracking-wider block uppercase">BEST SOLVE STATS</span>
-          <div className="mt-1">
-            {bestSolve ? (
-              <div>
-                <span className="text-2xl font-display font-black">{bestSolve.time.toFixed(2)}s</span>
-                <span className="text-xs theme-muted-text font-mono font-bold block">
-                  Across {bestSolve.count} registered solves
-                </span>
-              </div>
-            ) : (
-              <div className="theme-muted-text text-xs font-bold uppercase mt-1.5">No solves registered yet</div>
-            )}
-          </div>
-        </div>
-      </div>
     </section>
   );
 }
