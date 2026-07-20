@@ -34,6 +34,7 @@ import TimerSettingsPopover from "./components/TimerSettingsPopover";
 import type { CaseType, Penalty, Session, SessionType, Solve, TimerSettings, TimerPhase } from "./types";
 import { DEFAULT_TIMER_SETTINGS } from "./types";
 import { InspectionAlerts } from "./lib/audio";
+import { formatSeconds } from "./lib/stats";
 import { registerSW } from "virtual:pwa-register";
 
 export type CaseItem = OLLCase | PLLCase | F2LCase;
@@ -63,22 +64,14 @@ function loadMastery(): MasteryByCaseType {
       }), {} as MasteryByCaseType);
     }
 
-    // One-time migration from the original per-mode keys.
-    return CASE_TYPES.reduce((all, type) => {
-      const legacy = localStorage.getItem(`ll-mastery-${type}`);
-      return { ...all, [type]: { ...defaults[type], ...(legacy ? JSON.parse(legacy) : {}) } };
-    }, {} as MasteryByCaseType);
   } catch (e) {
     console.error(e);
-    return defaults;
   }
+  return defaults;
 }
 
 // ── Session persistence helpers ────────────────────────────────────
-const genId = () =>
-  (typeof crypto !== "undefined" && "randomUUID" in crypto
-    ? crypto.randomUUID()
-    : Math.random().toString(36).slice(2) + Date.now().toString(36));
+const genId = () => crypto.randomUUID();
 
 function makeSession(name: string, type: SessionType, caseType: CaseType): Session {
   return { id: genId(), name, type, pinned: false, caseType, createdAt: Date.now(), solves: [] };
@@ -484,13 +477,7 @@ export default function App() {
     setPendingPenalty("none");
   }
 
-  function beginInspection() {
-    if (!timerSettings.inspectionOn) {
-      goPhase("ready");
-      return;
-    }
-    goPhase("inspection");
-    setInspectionLeft(timerSettings.inspectionSec);
+  function startInspectionCountdown() {
     if (inspectionIntervalRef.current) clearInterval(inspectionIntervalRef.current);
     inspectionIntervalRef.current = setInterval(() => {
       setInspectionLeft(prev => {
@@ -505,6 +492,16 @@ export default function App() {
         return next;
       });
     }, 1000) as unknown as number;
+  }
+
+  function beginInspection() {
+    if (!timerSettings.inspectionOn) {
+      goPhase("ready");
+      return;
+    }
+    goPhase("inspection");
+    setInspectionLeft(timerSettings.inspectionSec);
+    startInspectionCountdown();
   }
 
   // Called on press/hold start (pointer or Space down)
@@ -529,19 +526,7 @@ export default function App() {
       if (holdTimeoutRef.current) { clearTimeout(holdTimeoutRef.current); holdTimeoutRef.current = null; }
       if (timerSettings.inspectionOn && inspectionLeft > 0) {
         goPhase("inspection");
-        inspectionIntervalRef.current = setInterval(() => {
-          setInspectionLeft(prev => {
-            const next = prev - 1;
-            if (next === 8 && timerSettings.alertsOn) InspectionAlerts.warn();
-            if (next === 12 && timerSettings.alertsOn) InspectionAlerts.final();
-            if (next <= 0) {
-              if (timerSettings.alertsOn) InspectionAlerts.expired();
-              setPendingPenalty("+2");
-              return 0;
-            }
-            return next;
-          });
-        }, 1000) as unknown as number;
+        startInspectionCountdown();
       } else {
         goPhase("idle");
       }
@@ -712,10 +697,7 @@ export default function App() {
     }
   };
 
-  const formatTime = (ms: number) => {
-    const totalSeconds = ms / 1000;
-    return totalSeconds.toFixed(2) + "s";
-  };
+  const formatTime = (ms: number) => formatSeconds(ms / 1000);
 
   // When caseType changes, reset trainer state
   useEffect(() => {

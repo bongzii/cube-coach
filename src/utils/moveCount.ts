@@ -1,5 +1,4 @@
-const isDouble = (token: string): boolean =>
-  /2'?$/.test(token) && !/\)2'?$/.test(token);
+const isDouble = (token: string): boolean => /2'?$/.test(token);
 
 const countTokens = (s: string): number =>
   s.trim().split(/\s+/).filter(Boolean)

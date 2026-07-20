@@ -1,4 +1,4 @@
-import type { Solve, Penalty } from "../types";
+import type { Solve } from "../types";
 
 /** Effective time in seconds for a solve (DNF -> Infinity, +2 adds 2s). */
 export function effectiveTime(s: Solve): number {
@@ -62,8 +62,4 @@ export function formatSolveTime(s: Solve, precision = 2): string {
 export function formatSeconds(sec: number, precision = 2): string {
   if (!isFinite(sec)) return "DNF";
   return sec.toFixed(precision) + "s";
-}
-
-export function penaltyLabel(p: Penalty): string {
-  return p === "none" ? "" : p;
 }

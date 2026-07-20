@@ -2,7 +2,6 @@ import { RefreshCw, Copy, Check, CheckCircle, Circle, Info, HelpCircle } from "l
 import CaseImage from "./CaseImage";
 import type { CaseItem } from "../App";
 import type { Penalty, TimerPhase, TimerSettings } from "../types";
-import { penaltyLabel } from "../lib/stats";
 
 interface TrainerTimerProps {
   activeCase: CaseItem | null;
@@ -152,7 +151,7 @@ export default function TrainerTimer({
                       : "theme-btn-ghost border-2 theme-border-main"
                   }`}
                 >
-                  {penaltyLabel(p)}
+                  {p === "none" ? "" : p}
                 </button>
               ))}
             </div>

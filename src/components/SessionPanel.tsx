@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Penalty, Session, SessionType, TimerSettings, SESSION_TYPE_LABELS } from "../types";
-import { computeSessionStats, formatSeconds, formatSolveTime, penaltyLabel } from "../lib/stats";
+import { computeSessionStats, formatSeconds, formatSolveTime } from "../lib/stats";
 
 interface SessionPanelProps {
   sessions: Session[];
@@ -134,7 +134,7 @@ export default function SessionPanel({
                   <div className="flex flex-col">
                     <span className={`font-display font-black text-sm ${sv.penalty === "DNF" ? "text-red-600" : "theme-card-text"}`}>
                       {formatSolveTime(sv, timerSettings.precision)}
-                      {sv.penalty !== "none" && <span className="ml-1 text-xs text-red-600">{penaltyLabel(sv.penalty)}</span>}
+                      {sv.penalty !== "none" && <span className="ml-1 text-xs text-red-600">{sv.penalty}</span>}
                     </span>
                     <span className="text-[10px] theme-muted-text truncate max-w-[180px]">{sv.caseName} · {sv.scramble}</span>
                   </div>
