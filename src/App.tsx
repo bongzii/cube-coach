@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Copy, Check, RefreshCw, HelpCircle, Boxes, Grid3x3, Shapes } from "lucide-react";
+import { Copy, Check, RefreshCw, HelpCircle, Boxes, Grid3x3, Shapes, Timer, BookOpen } from "lucide-react";
 import { ollCases, OLLCase } from "./data/ollCases";
 import { pllCases, PLLCase } from "./data/pllCases";
 import { f2lCases, F2LCase } from "./data/f2lCases";
@@ -13,6 +13,7 @@ import NotationLegend from "./components/NotationLegend";
 import Toast from "./components/Toast";
 import AlgorithmSelector from "./components/AlgorithmSelector";
 import FilterBar from "./components/FilterBar";
+import TimerSection from "./components/TimerSection";
 import type { CaseType } from "./types";
 import { registerSW } from "virtual:pwa-register";
 
@@ -49,6 +50,11 @@ function loadMastery(): MasteryByCaseType {
 }
 
 export default function App() {
+  const [viewMode, setViewMode] = useState<"library" | "timer">(() => {
+    return (localStorage.getItem("cube-coach-view") as "library" | "timer") || "library";
+  });
+  useEffect(() => { localStorage.setItem("cube-coach-view", viewMode); }, [viewMode]);
+
   const [caseType, setCaseType] = useState<"oll" | "pll" | "f2l">(() => {
     return (localStorage.getItem("ll-case-type") as "oll" | "pll" | "f2l") || "f2l";
   });
@@ -307,6 +313,32 @@ export default function App() {
           <div className="flex flex-wrap items-center gap-3 self-stretch md:self-auto justify-end">
             <div className="theme-toggle-group flex p-0.5 rounded-xl theme-shadow-small">
               <button
+                onClick={() => setViewMode("library")}
+                className={`px-3 py-1.5 rounded-lg font-black text-xs uppercase transition-all active:scale-95 ${
+                  viewMode === "library" ? "theme-btn-primary theme-shadow-tiny" : "theme-btn-ghost"
+                }`}
+              >
+                <span className="flex items-center gap-1">
+                  <BookOpen className="w-3 h-3" />
+                  Library
+                </span>
+              </button>
+              <button
+                onClick={() => setViewMode("timer")}
+                className={`px-3 py-1.5 rounded-lg font-black text-xs uppercase transition-all active:scale-95 ${
+                  viewMode === "timer" ? "theme-btn-primary theme-shadow-tiny" : "theme-btn-ghost"
+                }`}
+              >
+                <span className="flex items-center gap-1">
+                  <Timer className="w-3 h-3" />
+                  Timer
+                </span>
+              </button>
+            </div>
+
+            {viewMode === "library" && (
+            <div className="theme-toggle-group flex p-0.5 rounded-xl theme-shadow-small">
+              <button
                 onClick={() => setCaseType("f2l")}
                 className={`px-3 py-1.5 rounded-lg font-black text-xs uppercase transition-all active:scale-95 ${
                   caseType === "f2l" ? "theme-btn-primary theme-shadow-tiny" : "theme-btn-ghost"
@@ -340,6 +372,7 @@ export default function App() {
                 </span>
               </button>
             </div>
+            )}
 
             <div className="theme-control-surface flex items-center rounded-xl px-3 py-1 theme-shadow-small">
               <span className="text-xs font-black uppercase font-mono mr-1.5">Theme:</span>
@@ -369,43 +402,44 @@ export default function App() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        {viewMode === "library" ? (
+          <>
+            <StatsCards
+              masteredCount={masteredCount}
+              learningCount={learningCount}
+              notStartedCount={notStartedCount}
+              totalCases={totalCases}
+            />
 
-        <StatsCards
-          masteredCount={masteredCount}
-          learningCount={learningCount}
-          notStartedCount={notStartedCount}
-          totalCases={totalCases}
-        />
+            <div id="grid-view-section">
+              <FilterBar
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                selectedGroup={selectedGroup}
+                onGroupChange={setSelectedGroup}
+                selectedStatus={selectedStatus}
+                onStatusChange={setSelectedStatus}
+                onResetProgress={handleResetProgress}
+                groups={groups}
+                getGroupStats={getGroupStats}
+              />
 
-        <div id="grid-view-section">
-          <FilterBar
-            searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
-            selectedGroup={selectedGroup}
-            onGroupChange={setSelectedGroup}
-            selectedStatus={selectedStatus}
-            onStatusChange={setSelectedStatus}
-            onResetProgress={handleResetProgress}
-            groups={groups}
-            getGroupStats={getGroupStats}
-          />
-
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-display font-black theme-card-text uppercase tracking-tight flex items-center gap-2">
-              <span className="theme-pill-accent-soft px-4 py-1.5 rounded-xl border-2 theme-border-main text-xs font-mono font-bold theme-shadow-small">
-                {filteredCases.length} Cases Match Filters
-              </span>
-            </h2>
-            {selectedGroup !== "All" && (
-              <div className="text-sm font-black theme-card-text uppercase tracking-tight">
-                Category Progress: <span className="theme-pill-accent-soft text-blue-600 px-2 py-0.5 rounded border theme-border-main">{getGroupStats(selectedGroup).percentage}% mastered</span>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-display font-black theme-card-text uppercase tracking-tight flex items-center gap-2">
+                  <span className="theme-pill-accent-soft px-4 py-1.5 rounded-xl border-2 theme-border-main text-xs font-mono font-bold theme-shadow-small">
+                    {filteredCases.length} Cases Match Filters
+                  </span>
+                </h2>
+                {selectedGroup !== "All" && (
+                  <div className="text-sm font-black theme-card-text uppercase tracking-tight">
+                    Category Progress: <span className="theme-pill-accent-soft text-blue-600 px-2 py-0.5 rounded border theme-border-main">{getGroupStats(selectedGroup).percentage}% mastered</span>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
 
-          {filteredCases.length > 0 ? (
-            <div id="ll-cards-grid" className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {filteredCases.map((llCase, cardIndex) => {
+              {filteredCases.length > 0 ? (
+                <div id="ll-cards-grid" className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  {filteredCases.map((llCase, cardIndex) => {
                 const currentStatus = masteryData[llCase.id] || "Not Started";
                 const colorKey = caseType === "f2l" ? llCase.category : llCase.group;
 
@@ -570,7 +604,11 @@ export default function App() {
               </button>
             </div>
           )}
-        </div>
+          </div>
+          </>
+        ) : (
+          <TimerSection />
+        )}
       </main>
 
       <ImageModal
