@@ -5,6 +5,7 @@ import { computeStats, formatTime, type Solve, type Penalty } from "../lib/solve
 import { useTimer, type TimerSettings, DEFAULT_SETTINGS } from "../lib/timer";
 import TimerStats from "./TimerStats";
 import TimeList from "./TimeList";
+import ScrambleNet from "./ScrambleNet";
 
 const STORAGE_KEY = "cube-coach-timer";
 
@@ -82,7 +83,10 @@ export default function TimerSection() {
 
   return (
     <div className="max-w-3xl mx-auto">
-      {/* Scramble */}
+      {/* Scramble net */}
+      <ScrambleNet scramble={scramble} />
+
+      {/* Scramble text */}
       <div className="theme-card rounded-2xl border-2 theme-border-main p-4 mb-4 flex items-center gap-3 theme-shadow-small">
         <span className="text-sm font-black font-mono theme-card-text leading-relaxed flex-1 select-none">{scramble}</span>
         <button
