@@ -142,14 +142,6 @@ export default function App() {
     }
   }, [caseType]);
 
-  // F2L-specific case properties
-  const getF2LCaseProperties = (f2lCase: F2LCase) => {
-    return {
-      slot: f2lCase.slot,
-      edgeOriented: f2lCase.edgeOriented,
-    };
-  };
-
   // Dynamic groups based on case type
   const groups = useMemo(() => {
     if (caseType === "oll") {
@@ -385,15 +377,17 @@ export default function App() {
 
   const getScramble = (id: number) => customScrambles[`${caseType}-${id}`] ?? defaultScrambles[id] ?? "";
 
+  const copyText = (text: string) => navigator.clipboard.writeText(text);
+
   const handleCopy = (scramble: string, id: number) => {
-    navigator.clipboard.writeText(scramble);
+    copyText(scramble);
     setCopiedId(id);
     showToast("Copied!", id);
     setTimeout(() => setCopiedId(null), 1500);
   };
 
   const handleCopyTrainer = (scramble: string) => {
-    navigator.clipboard.writeText(scramble);
+    copyText(scramble);
     setCopiedScramble(scramble);
     setTimeout(() => setCopiedScramble(null), 1500);
   };
@@ -697,6 +691,11 @@ export default function App() {
     return { best, avg, count: records.length };
   };
 
+  const overallBest = () => {
+    const all = Object.values(solveHistory).flatMap(h => h.map(r => r.time));
+    return all.length ? { time: Math.min(...all), count: all.length } : null;
+  };
+
   const handleTrainerResult = (status: "Mastered" | "Learning") => {
     if (!activeTrainerCase) return;
     updateStatus(activeTrainerCase.id, status);
@@ -862,10 +861,7 @@ export default function App() {
           learningCount={learningCount}
           notStartedCount={notStartedCount}
           totalCases={totalCases}
-          bestSolve={solveHistory && Object.keys(solveHistory).length > 0 ? {
-            time: Math.min(...(Object.values(solveHistory) as { date: string; time: number }[][]).flatMap(h => h.map(r => r.time))),
-            count: (Object.values(solveHistory) as { date: string; time: number }[][]).reduce((sum, h) => sum + h.length, 0)
-          } : null}
+          bestSolve={overallBest()}
         />
 
 
@@ -926,8 +922,8 @@ export default function App() {
                         </span>
                           {caseType === "f2l" && (
                             <F2LSlotIndicator
-                              slot={getF2LCaseProperties(llCase as F2LCase).slot}
-                              edgeOriented={getF2LCaseProperties(llCase as F2LCase).edgeOriented}
+                              slot={(llCase as F2LCase).slot}
+                              edgeOriented={(llCase as F2LCase).edgeOriented}
                             />
                           )}
 
