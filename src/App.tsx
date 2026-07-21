@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Copy, Check, RefreshCw, HelpCircle, Boxes, Grid3x3, Shapes, Timer, BookOpen } from "lucide-react";
+import { Copy, Check, RefreshCw, HelpCircle, Boxes, Grid3x3, Shapes } from "lucide-react";
 import { ollCases, OLLCase } from "./data/ollCases";
 import { pllCases, PLLCase } from "./data/pllCases";
 import { f2lCases, F2LCase } from "./data/f2lCases";
@@ -13,7 +13,6 @@ import NotationLegend from "./components/NotationLegend";
 import Toast from "./components/Toast";
 import AlgorithmSelector from "./components/AlgorithmSelector";
 import FilterBar from "./components/FilterBar";
-import TimerSection from "./components/TimerSection";
 import type { CaseType } from "./types";
 import { registerSW } from "virtual:pwa-register";
 
@@ -50,11 +49,6 @@ function loadMastery(): MasteryByCaseType {
 }
 
 export default function App() {
-  const [viewMode, setViewMode] = useState<"library" | "timer">(() => {
-    return (localStorage.getItem("cube-coach-view") as "library" | "timer") || "library";
-  });
-  useEffect(() => { localStorage.setItem("cube-coach-view", viewMode); }, [viewMode]);
-
   const [caseType, setCaseType] = useState<"oll" | "pll" | "f2l">(() => {
     return (localStorage.getItem("ll-case-type") as "oll" | "pll" | "f2l") || "f2l";
   });
@@ -313,32 +307,6 @@ export default function App() {
           <div className="flex flex-wrap items-center gap-3 self-stretch md:self-auto justify-end">
             <div className="theme-toggle-group flex p-0.5 rounded-xl theme-shadow-small">
               <button
-                onClick={() => setViewMode("library")}
-                className={`px-3 py-1.5 rounded-lg font-black text-xs uppercase transition-all active:scale-95 ${
-                  viewMode === "library" ? "theme-btn-primary theme-shadow-tiny" : "theme-btn-ghost"
-                }`}
-              >
-                <span className="flex items-center gap-1">
-                  <BookOpen className="w-3 h-3" />
-                  Library
-                </span>
-              </button>
-              <button
-                onClick={() => setViewMode("timer")}
-                className={`px-3 py-1.5 rounded-lg font-black text-xs uppercase transition-all active:scale-95 ${
-                  viewMode === "timer" ? "theme-btn-primary theme-shadow-tiny" : "theme-btn-ghost"
-                }`}
-              >
-                <span className="flex items-center gap-1">
-                  <Timer className="w-3 h-3" />
-                  Timer
-                </span>
-              </button>
-            </div>
-
-            {viewMode === "library" && (
-            <div className="theme-toggle-group flex p-0.5 rounded-xl theme-shadow-small">
-              <button
                 onClick={() => setCaseType("f2l")}
                 className={`px-3 py-1.5 rounded-lg font-black text-xs uppercase transition-all active:scale-95 ${
                   caseType === "f2l" ? "theme-btn-primary theme-shadow-tiny" : "theme-btn-ghost"
@@ -372,7 +340,6 @@ export default function App() {
                 </span>
               </button>
             </div>
-            )}
 
             <div className="theme-control-surface flex items-center rounded-xl px-3 py-1 theme-shadow-small">
               <span className="text-xs font-black uppercase font-mono mr-1.5">Theme:</span>
@@ -402,14 +369,12 @@ export default function App() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        {viewMode === "library" ? (
-          <>
-            <StatsCards
-              masteredCount={masteredCount}
-              learningCount={learningCount}
-              notStartedCount={notStartedCount}
-              totalCases={totalCases}
-            />
+          <StatsCards
+            masteredCount={masteredCount}
+            learningCount={learningCount}
+            notStartedCount={notStartedCount}
+            totalCases={totalCases}
+          />
 
             <div id="grid-view-section">
               <FilterBar
@@ -605,10 +570,6 @@ export default function App() {
             </div>
           )}
           </div>
-          </>
-        ) : (
-          <TimerSection />
-        )}
       </main>
 
       <ImageModal
